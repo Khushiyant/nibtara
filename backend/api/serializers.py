@@ -23,6 +23,19 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
 
 class UserLoginSerializer(serializers.ModelSerializer):
+    """
+    Serializer for user login.
+
+    This serializer is used to validate user login credentials and authenticate the user.
+
+    Attributes:
+        email (serializers.EmailField): Email field for user email.
+        password (str): Password field for user password.
+
+    Methods:
+        validate(data): Validates the user login credentials and returns the validated data.
+
+    """
     email = serializers.EmailField(max_length=255)
 
     class Meta:
@@ -46,7 +59,12 @@ class UserLoginSerializer(serializers.ModelSerializer):
 # Serializer for Entry model
 
 
-class PreTrialerializer(serializers.ModelSerializer):
+class PreTrialSerializer(serializers.ModelSerializer):
+    """
+    A serializer for the PreTrial model.
+
+    This serializer serializes all fields of the PreTrial model.
+    """
     class Meta:
         model = PreTrial
         fields = "__all__"

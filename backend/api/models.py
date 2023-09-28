@@ -9,6 +9,31 @@ from .managers import UserAccountManager
 
 
 class UserAccount(AbstractBaseUser, PermissionsMixin):
+    """
+    A custom user model with email as the unique identifier and additional fields for user types.
+
+    Fields:
+    - name: CharField, max length 255
+    - email: EmailField, unique
+    - is_client: BooleanField, default True
+    - is_lawyer: BooleanField, default False
+    - is_judge: BooleanField, default False
+    - is_active: BooleanField, default True
+    - is_staff: BooleanField, default False
+    - is_superuser: BooleanField, default False
+    - created_at: DateTimeField, auto_now_add
+    - updated_at: DateTimeField, auto_now
+
+    Managers:
+    - objects: UserAccountManager
+
+    Required fields:
+    - email (USERNAME_FIELD)
+    - name (REQUIRED_FIELDS)
+
+    Methods:
+    - __str__: returns email
+    """
     name = models.CharField(max_length=255)
     email = models.EmailField(("email address"), unique=True)
 
@@ -35,6 +60,24 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 
 
 class Lawyer(models.Model):
+    """
+    A model representing a lawyer.
+
+    Attributes:
+    -----------
+    user : UserAccount
+        The user account associated with the lawyer.
+    bar_code : str
+        The bar code of the lawyer.
+    chamber_address : str
+        The address of the lawyer's chamber.
+    lawyer_type : int
+        The type of lawyer. Can be one of the following:
+            1. Civil
+            2. Criminal
+            3. Family
+            4. Corporate
+    """
     LAWYER_TYPE = [
         ('1', 'Civil'),
         ('2', 'Criminal'),
@@ -58,6 +101,20 @@ class Lawyer(models.Model):
 
 
 class Judge(models.Model):
+    """
+    A model representing a judge in the legal system.
+
+    Attributes:
+        user (UserAccount): The user account associated with the judge.
+        bar_code (str): The bar code of the judge.
+        court_address (str): The address of the court where the judge presides.
+
+    Meta:
+        ordering (tuple): The default ordering for Judge objects, by user creation date.
+
+    Methods:
+        __str__(): Returns a string representation of the judge, using their bar code.
+    """
     user = models.ForeignKey(
         UserAccount,
         on_delete=models.CASCADE,
@@ -78,6 +135,17 @@ class Judge(models.Model):
 # User Model Additional Data
 
 class PreTrial(models.Model):
+    """
+    Model representing a pre-trial record for a user.
+
+    Attributes:
+        user (ForeignKey): The user account associated with this pre-trial record.
+        case_act (TextField): The case act associated with this pre-trial record.
+        details (TextField): Additional details about this pre-trial record.
+        date_registered (DateField): The date this pre-trial record was registered.
+        created_at (DateTimeField): The date and time this pre-trial record was created.
+        updated_at (DateTimeField): The date and time this pre-trial record was last updated.
+    """
     user = models.ForeignKey(
         UserAccount,
         on_delete=models.CASCADE,

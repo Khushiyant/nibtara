@@ -14,11 +14,21 @@ import json
 from .models import PreTrial, UserAccount
 from .serializers import (PreTrialerializer, UserLoginSerializer,
                           UserRegisterSerializer)
+from django.utils.translation import gettext_lazy as _
 
 # START: Token Generation
 
 
 def _get_tokens_for_user(user) -> dict[str, str]:
+    """
+    Given a user object, returns a dictionary containing the refresh and access tokens for the user.
+
+    Args:
+        user: A user object.
+
+    Returns:
+        A dictionary containing the refresh and access tokens for the user.
+    """
     refresh = RefreshToken.for_user(user)
 
     return {
@@ -103,7 +113,7 @@ class RegisterAPIView(APIView):
             return Response(
                 {
                     "message": "Something went wrong",
-                    "errors": str(e),
+                    "errors": _(str(e)),
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
