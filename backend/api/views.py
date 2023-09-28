@@ -11,8 +11,8 @@ from rest_framework_simplejwt.token_blacklist.models import (BlacklistedToken,
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.serializers import serialize
 import json
-from .models import PreTrials, UserAccount
-from .serializers import (PretrialSerializer, UserLoginSerializer,
+from .models import PreTrial, UserAccount
+from .serializers import (PreTrialerializer, UserLoginSerializer,
                           UserRegisterSerializer)
 
 # START: Token Generation

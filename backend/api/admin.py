@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import PreTrials, UserAccount
+from .models import PreTrial, UserAccount
 
 
-admin.site.register(PreTrials)
+admin.site.register(PreTrial)
 admin.site.register(UserAccount)

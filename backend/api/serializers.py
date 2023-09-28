@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import UserAccount, PreTrials
+from .models import UserAccount, PreTrial
 from django.contrib.auth import authenticate
 
 
@@ -46,7 +46,7 @@ class UserLoginSerializer(serializers.ModelSerializer):
 # Serializer for Entry model
 
 
-class PretrialSerializer(serializers.ModelSerializer):
+class PreTrialerializer(serializers.ModelSerializer):
     class Meta:
-        model = PreTrials
+        model = PreTrial
         fields = "__all__"
