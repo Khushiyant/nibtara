@@ -1,6 +1,8 @@
+import datetime
+
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
-import datetime
+from django.utils.translation import gettext_lazy as _
 
 from .managers import UserAccountManager
 
@@ -34,18 +36,27 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     Methods:
     - __str__: returns email
     """
-    name = models.CharField(max_length=255)
-    email = models.EmailField(("email address"), unique=True)
+    class UserTypes(models.TextChoices):
+        CLIENT = 'CLIENT', 'Client'
+        LAWYER = 'LAWYER', 'Lawyer'
+        JUDGE = 'JUDGE', 'Judge'
 
+    name = models.CharField(_("Name of the User"), max_length=255)
+    email = models.EmailField(_("Email Address of the User"), unique=True)
+    # avatar = models.ImageField(
+    #     _("Avatar of the User"), upload_to="avatars/", null=True, blank=True)
     # START: User types
-    is_client = models.BooleanField(default=True)
-    is_lawyer = models.BooleanField(default=False)
-    is_judge = models.BooleanField(default=False)
+    user_type = models.CharField(
+        _("User Type"), max_length=50, choices=UserTypes.choices ,default=UserTypes.CLIENT)
     # END: User types
 
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=False)
+
+    is_active = models.BooleanField(
+        _("Boolean definining active status"), default=True)
+    is_staff = models.BooleanField(
+        _("Boolean definining staff access level"), default=False)
+    is_superuser = models.BooleanField(
+        _("Boolean definining staff access level"), default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -78,20 +89,23 @@ class Lawyer(models.Model):
             3. Family
             4. Corporate
     """
-    LAWYER_TYPE = [
-        ('1', 'Civil'),
-        ('2', 'Criminal'),
-        ('3', 'Family'),
-        ('4', 'Corporate'),
-    ]
+    class LawyerTypes(models.TextChoices):
+        CIVIL = 'CIVIL', 'Civil'
+        CRIMINAL = 'CRIMINAL', 'Criminal'
+        FAMILY = 'FAMILY', 'Family'
+        CORPORATE = 'CORPORATE', 'Corporate'
+
     user = models.ForeignKey(
         UserAccount,
         on_delete=models.CASCADE,
         related_name="lawyers")
-    bar_code = models.CharField(max_length=255)
-    chamber_address = models.TextField(null=True, blank=True)
-    lawyer_type = models.PositiveSmallIntegerField(
-        choices=LAWYER_TYPE, default=1)
+    
+    bar_code = models.CharField(
+        _("Bar council code for lawyers"), max_length=255)
+    chamber_address = models.TextField(
+        _("Chamber address for lawyers"), null=True, blank=True)
+    lawyer_type = models.CharField(_("Lawyer Types"), max_length=50,
+        choices=LawyerTypes.choices, default=LawyerTypes.CIVIL)
 
     class Meta:
         ordering = ('user__created_at',)
@@ -119,8 +133,10 @@ class Judge(models.Model):
         UserAccount,
         on_delete=models.CASCADE,
         related_name="judges")
-    bar_code = models.CharField(max_length=255)
-    court_address = models.TextField(null=True, blank=True)
+    bar_code = models.CharField(
+        _("Bar council code for judges"), max_length=255)
+    court_address = models.TextField(
+        _("Court Address for judges"), null=True, blank=True)
 
     class Meta:
         ordering = ('user__created_at',)

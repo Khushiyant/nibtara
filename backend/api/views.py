@@ -1,20 +1,21 @@
+import json
+
 import requests
 from django.contrib.auth import authenticate
 from django.core.paginator import Paginator
-
+from django.core.serializers import serialize
+from django.utils.translation import gettext_lazy as _
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.token_blacklist.models import (BlacklistedToken,
                                                              OutstandingToken)
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.core.serializers import serialize
-import json
+
 from .models import PreTrial, UserAccount
-from .serializers import (PreTrialerializer, UserLoginSerializer,
+from .serializers import (PreTrialSerializer, UserLoginSerializer,
                           UserRegisterSerializer)
-from django.utils.translation import gettext_lazy as _
 
 # START: Token Generation
 
@@ -39,6 +40,14 @@ def _get_tokens_for_user(user) -> dict[str, str]:
 
 
 class LogoutAPIView(APIView):
+    """
+    API view to logout a user by blacklisting their refresh token(s).
+
+    If the request data contains "all" key with a truthy value, all refresh tokens for the user will be blacklisted.
+    Otherwise, the refresh token provided in the request data will be blacklisted.
+
+    Returns a JSON response with a message and HTTP status code.
+    """
     serializer_class = None
     permission_classes = (IsAuthenticated,)
 
@@ -56,6 +65,11 @@ class LogoutAPIView(APIView):
 
 
 class LoginAPIView(APIView):
+    """
+    API view for user login.
+
+    Accepts email and password in the request body and returns JWT tokens if the credentials are valid.
+    """
     serializer_class = UserLoginSerializer
     permission_classes = (AllowAny,)
 

@@ -43,10 +43,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Third-Party Apps
-    'rest_framework',
     'corsheaders',
+    'rest_framework',
     'rest_framework_simplejwt',
     'whitenoise',
+    'drf_spectacular',
 
     # Local Apps
     'api',
@@ -72,12 +73,20 @@ CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = 'nyay.urls'
 
 REST_FRAMEWORK = {
-
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': (
 
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Nibtara API',
+    'DESCRIPTION': 'E-Portal for facilitating Case Management Hearing of various types of cases',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    # OTHER SETTINGS
 }
 
 TEMPLATES = [
