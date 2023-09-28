@@ -27,11 +27,6 @@ load_dotenv()
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -87,7 +82,7 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'E-Portal for facilitating Case Management Hearing of various types of cases',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
-    # OTHER SETTINGS
+
 }
 
 TEMPLATES = [
@@ -171,3 +166,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Custom Auth User Model
 AUTH_USER_MODEL = "api.UserAccount"
+LOGIN_REDIRECT_URL = '/api/v1/login/'
