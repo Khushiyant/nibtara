@@ -4,11 +4,27 @@ from .models import UserAccount, PreTrial
 from django.contrib.auth import authenticate
 
 
-# Serializer for user registration
-class UserRegisterSerializer(serializers.ModelSerializer):
+# Serializer for base user registration
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    """
+    Serializer for base user registration.
+
+    This serializer is used to validate base user registration data.
+
+    Attributes:
+        email (serializers.EmailField): Email field for user email.
+        password (serializers.CharField): Password field for user password.
+        name (serializers.CharField): Char field for user name.
+        user_type (serializers.CharField): Char field for user type.
+
+    Methods:
+        validate(data): Validates the user registration data and returns the validated data.
+
+    """
+
     class Meta:
         model = UserAccount
-        fields = ["email", "name", "password"]
+        fields = ["email", "password", "name"]
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
@@ -18,6 +34,30 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
+
+    def validate(self, data):
+        email = data.get("email", None)
+        password = data.get("password", None)
+        name = data.get("name", None)
+
+        if email is None:
+            raise serializers.ValidationError(
+                'An email address is required to register.'
+            )
+        if password is None:
+            raise serializers.ValidationError(
+                'A password is required to register.'
+            )
+        if name is None:
+            raise serializers.ValidationError(
+                'A name is required to register.'
+            )
+        return data
+
+# Serializer for lawyer registration
+
+# Serializer for judge registration
+
 
 # Serializer for user login
 

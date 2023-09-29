@@ -15,7 +15,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import PreTrial, UserAccount
 from .serializers import (PreTrialSerializer, UserLoginSerializer,
-                          UserRegisterSerializer)
+                          UserRegistrationSerializer)
 
 # START: Token Generation
 
@@ -105,15 +105,15 @@ class LoginAPIView(APIView):
             )
 
 
-class RegisterAPIView(APIView):
-    serializer_class = UserRegisterSerializer
+class UserRegisterAPIView(APIView):
+    serializer_class = UserRegistrationSerializer
     permission_classes = (AllowAny,)
 
     def post(self, request):
         try:
             data = request.data
 
-            serializer = UserRegisterSerializer(data=data)
+            serializer = self.serializer_class(data=data)
             if serializer.is_valid():
                 user = serializer.save()
                 tokens = _get_tokens_for_user(user)

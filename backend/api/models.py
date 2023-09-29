@@ -36,7 +36,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     Methods:
     - __str__: returns email
     """
-    class UserTypes(models.TextChoices):
+    class Roles(models.TextChoices):
         CLIENT = 'CLIENT', 'Client'
         LAWYER = 'LAWYER', 'Lawyer'
         JUDGE = 'JUDGE', 'Judge'
@@ -47,7 +47,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     #     _("Avatar of the User"), upload_to="avatars/", null=True, blank=True)
     # START: User types
     user_type = models.CharField(
-        _("User Type"), max_length=50, choices=UserTypes.choices ,default=UserTypes.CLIENT)
+        _("User Type"), max_length=50, choices=Roles.choices ,default=Roles.CLIENT)
     # END: User types
 
 
@@ -89,13 +89,13 @@ class Lawyer(models.Model):
             3. Family
             4. Corporate
     """
-    class LawyerTypes(models.TextChoices):
+    class Roles(models.TextChoices):
         CIVIL = 'CIVIL', 'Civil'
         CRIMINAL = 'CRIMINAL', 'Criminal'
         FAMILY = 'FAMILY', 'Family'
         CORPORATE = 'CORPORATE', 'Corporate'
 
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         UserAccount,
         on_delete=models.CASCADE,
         related_name="lawyers")
@@ -105,7 +105,7 @@ class Lawyer(models.Model):
     chamber_address = models.TextField(
         _("Chamber address for lawyers"), null=True, blank=True)
     lawyer_type = models.CharField(_("Lawyer Types"), max_length=50,
-        choices=LawyerTypes.choices, default=LawyerTypes.CIVIL)
+        choices=Roles.choices, default=Roles.CIVIL)
 
     class Meta:
         ordering = ('user__created_at',)
@@ -129,7 +129,7 @@ class Judge(models.Model):
     Methods:
         __str__(): Returns a string representation of the judge, using their bar code.
     """
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         UserAccount,
         on_delete=models.CASCADE,
         related_name="judges")
