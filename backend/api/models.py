@@ -47,9 +47,8 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     #     _("Avatar of the User"), upload_to="avatars/", null=True, blank=True)
     # START: User types
     user_type = models.CharField(
-        _("User Type"), max_length=50, choices=Roles.choices ,default=Roles.CLIENT)
+        _("User Type"), max_length=50, choices=Roles.choices, default=Roles.CLIENT)
     # END: User types
-
 
     is_active = models.BooleanField(
         _("Boolean definining active status"), default=True)
@@ -99,13 +98,13 @@ class Lawyer(models.Model):
         UserAccount,
         on_delete=models.CASCADE,
         related_name="lawyers")
-    
+
     bar_code = models.CharField(
         _("Bar council code for lawyers"), max_length=255)
     chamber_address = models.TextField(
         _("Chamber address for lawyers"), null=True, blank=True)
     lawyer_type = models.CharField(_("Lawyer Types"), max_length=50,
-        choices=Roles.choices, default=Roles.CIVIL)
+                                   choices=Roles.choices, default=Roles.CIVIL)
 
     class Meta:
         ordering = ('user__created_at',)

@@ -1,7 +1,7 @@
 import pytest
-from api.models import (Judge, 
-                        Lawyer, 
-                        PreTrial, 
+from api.models import (Judge,
+                        Lawyer,
+                        PreTrial,
                         UserAccount)
 from rest_framework.test import APIClient
 

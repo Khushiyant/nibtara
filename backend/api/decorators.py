@@ -1,7 +1,9 @@
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.decorators import user_passes_test
 
-def client_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url='api/v1/login'):
+
+def client_required(
+        function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url='api/v1/login'):
     '''
     Decorator for views that checks that the logged in user is a client,
     redirects to the log-in page if necessary.
@@ -20,7 +22,9 @@ def client_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, logi
         return actual_decorator(function)
     return actual_decorator
 
-def lawyer_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url='api/v1/login'):
+
+def lawyer_required(
+        function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url='api/v1/login'):
     '''
     Decorator for views that checks that the logged in user is a lawyer,
     redirects to the log-in page if necessary.
@@ -39,11 +43,13 @@ def lawyer_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, logi
         return actual_decorator(function)
     return actual_decorator
 
-def judge_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url='api/v1/login'):
+
+def judge_required(
+        function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url='api/v1/login'):
     '''
     Decorator for views that checks that the logged in user is a judge,
     redirects to the log-in page if necessary.
-    
+
     :param function: The view function to decorate.
     :param redirect_field_name: The name of the query string parameter representing the URL to redirect to after login.
     :param login_url: The URL to redirect to if the user is not authenticated.
