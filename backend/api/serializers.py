@@ -54,14 +54,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             )
         return data
 
-# Serializer for lawyer registration
-
-# Serializer for judge registration
-
-
 # Serializer for user login
-
-
 class UserLoginSerializer(serializers.ModelSerializer):
     """
     Serializer for user login.
@@ -96,8 +89,14 @@ class UserLoginSerializer(serializers.ModelSerializer):
             )
         return data
 
-# Serializer for Entry model
 
+# Serializer for User model
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserAccount
+        fields = "__all__"
+
+# Serializer for Entry model
 
 class PreTrialSerializer(serializers.ModelSerializer):
     """
