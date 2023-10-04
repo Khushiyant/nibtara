@@ -30,3 +30,6 @@ static/
 # Dependency directories
 venv/
 node_modules/
+
+# tmp
+tmp/
