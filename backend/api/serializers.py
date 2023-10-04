@@ -1,7 +1,9 @@
+import re
+
+from django.contrib.auth import authenticate
 from rest_framework import serializers
 
-from .models import UserAccount, PreTrial, Lawyer, Judge
-from django.contrib.auth import authenticate
+from .models import Judge, Lawyer, PreTrial, UserAccount
 
 
 # Serializer for base user registration
@@ -109,13 +111,18 @@ class LawyerRegisterationSerializer(serializers.ModelSerializer):
         return instance
 
     def validate(self, data):
-        bar_code = data.get("bar_code", None)
+        enrollment_no = data.get("enrollment_no", None)
         user = data.get("user", None)
         if user is None:
             raise serializers.ValidationError(
                 'A user id is required to register for lawyer.'
             )
-        if bar_code is None:
+        if enrollment_no is None:
+            pattern = re.compile(
+                r"([A-Za-z0-9]+(/[A-Za-z0-9]+)+)", re.IGNORECASE)
+            if not pattern.match(enrollment_no):
+                raise serializers.ValidationError(
+                    'A valid enrollment number is required to register for lawyer.')
             raise serializers.ValidationError(
                 'A bar code is required to register for lawyer.'
             )

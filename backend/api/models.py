@@ -121,8 +121,10 @@ class Lawyer(models.Model):
         on_delete=models.CASCADE,
         related_name="lawyers")
 
-    bar_code = models.CharField(
-        _("Bar council code for lawyers"), max_length=255)
+    enrollment_no = models.CharField(
+        _("Bar council Enrollment No for lawyers"), max_length=255)
+    registeration_no = models.CharField(
+        _("Bar council Registration No for lawyers"), max_length=255, null=True, blank=True)
     chamber_address = models.TextField(
         _("Chamber address for lawyers"), null=True, blank=True)
     lawyer_type = models.CharField(_("Lawyer Types"), max_length=50,
