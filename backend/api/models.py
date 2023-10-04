@@ -3,8 +3,30 @@ import datetime
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.base_user import BaseUserManager
+from api.managers import UserAccountManager
 
-from .managers import UserAccountManager
+
+# START: Managers
+class LawyerManager(BaseUserManager):
+    """
+    Custom manager for the Lawyer model. 
+    - Provides a helper method for handling lawyer creation.
+    """
+
+    def get_queryset(self, *args, **kwargs):
+        return super().get_queryset(*args, **kwargs).filter(user__user_type=UserAccount.Roles.LAWYER)
+
+
+class JudgeManager(BaseUserManager):
+    """
+    Custom manager for the Judge model. 
+    - Provides a helper method for handling judge creation.
+    """
+
+    def get_queryset(self, *args, **kwargs):
+        return super().get_queryset(*args, **kwargs).filter(user__user_type=UserAccount.Roles.JUDGE)
+# END: Managers
 
 # START: User Models and its multi types
 # User Models and its multi types
@@ -106,6 +128,8 @@ class Lawyer(models.Model):
     lawyer_type = models.CharField(_("Lawyer Types"), max_length=50,
                                    choices=Roles.choices, default=Roles.CIVIL)
 
+    objects = LawyerManager()
+
     class Meta:
         ordering = ('user__created_at',)
 
@@ -136,6 +160,8 @@ class Judge(models.Model):
         _("Bar council code for judges"), max_length=255)
     court_address = models.TextField(
         _("Court Address for judges"), null=True, blank=True)
+
+    objects = JudgeManager()
 
     class Meta:
         ordering = ('user__created_at',)

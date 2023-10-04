@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import UserAccount, PreTrial
+from .models import UserAccount, PreTrial, Lawyer, Judge
 from django.contrib.auth import authenticate
 
 
@@ -42,19 +42,21 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
         if email is None:
             raise serializers.ValidationError(
-                'An email address is required to register.'
+                'An email address is required to register for user.'
             )
         if password is None:
             raise serializers.ValidationError(
-                'A password is required to register.'
+                'A password is required to register for user.'
             )
         if name is None:
             raise serializers.ValidationError(
-                'A name is required to register.'
+                'A name is required to register for user.'
             )
         return data
 
 # Serializer for user login
+
+
 class UserLoginSerializer(serializers.ModelSerializer):
     """
     Serializer for user login.
@@ -90,13 +92,70 @@ class UserLoginSerializer(serializers.ModelSerializer):
         return data
 
 
-# Serializer for User model
-class UserSerializer(serializers.ModelSerializer):
+class LawyerRegisterationSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Lawyer registration.
+    """
     class Meta:
-        model = UserAccount
+        model = Lawyer
         fields = "__all__"
 
+    def create(self, validated_data):
+        password = validated_data.pop('password', None)
+        instance = self.Meta.model(**validated_data)
+        if password is not None:
+            instance.set_password(password)
+        instance.save()
+        return instance
+
+    def validate(self, data):
+        bar_code = data.get("bar_code", None)
+        user = data.get("user", None)
+        if user is None:
+            raise serializers.ValidationError(
+                'A user id is required to register for lawyer.'
+            )
+        if bar_code is None:
+            raise serializers.ValidationError(
+                'A bar code is required to register for lawyer.'
+            )
+
+        return data
+
+
+class JudgeRegisterationSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Lawyer registration.
+    """
+    class Meta:
+        model = Judge
+        fields = "__all__"
+
+    def create(self, validated_data):
+        password = validated_data.pop('password', None)
+        instance = self.Meta.model(**validated_data)
+        if password is not None:
+            instance.set_password(password)
+        instance.save()
+        return instance
+
+    def validate(self, data):
+        bar_code = data.get("bar_code", None)
+        user = data.get("user", None)
+        if user is None:
+            raise serializers.ValidationError(
+                'A user id is required to register for judge.'
+            )
+        if bar_code is None:
+            raise serializers.ValidationError(
+                'A bar code is required to register for judge.'
+            )
+
+        return data
+
+
 # Serializer for Entry model
+
 
 class PreTrialSerializer(serializers.ModelSerializer):
     """
