@@ -1,9 +1,10 @@
 import datetime
 
+from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.base_user import BaseUserManager
+
 from api.managers import UserAccountManager
 
 
@@ -206,4 +207,61 @@ class PreTrial(models.Model):
     def __str__(self):
         return f"{self.calories}_{self.created_at}"
 
+
+class Hearing(models.Model):
+    """
+    A model representing a hearing in a legal case.
+
+    Attributes:
+        pretrial (ForeignKey): A foreign key to the PreTrial model.
+        scheduled_date (DateField): The date on which the hearing is scheduled.
+        scheduled_time (TimeField): The time at which the hearing is scheduled.
+        motion_details (TextField): Details of any motion filed for the hearing.
+        motion_granted (BooleanField): Indicates whether the motion was granted or not.
+        created_at (DateTimeField): The date and time at which the hearing was created.
+        updated_at (DateTimeField): The date and time at which the hearing was last updated.
+    """
+    pretrial = models.ForeignKey(
+        PreTrial,
+        on_delete=models.CASCADE,
+        related_name="hearings")
+
+    scheduled_date = models.DateField(default=datetime.date.today)
+    scheduled_time = models.TimeField(default=datetime.datetime.now().time())
+
+    motion_details = models.TextField(null=True, blank=True)
+    motion_granted = models.BooleanField(default=False)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ('scheduled_date',)
+
+
+class Document(models.Model):
+    """
+    A model representing a document related to a hearing.
+
+    Attributes:
+        hearing (ForeignKey): The hearing to which the document belongs.
+        name (CharField): The name of the document.
+        document_no (CharField): The document number.
+        file (FileField): The file of the document.
+        created_at (DateTimeField): The date and time when the document was created.
+        updated_at (DateTimeField): The date and time when the document was last updated.
+    """
+    hearing = models.ForeignKey(
+        Hearing,
+        on_delete=models.CASCADE,
+        related_name="documents")
+
+    name = models.CharField(max_length=255)
+    document_no = models.CharField(max_length=255)
+    file = models.FileField(upload_to='documents/')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ('name',)
 # END: User Model Additional Data
