@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 # from api.models import UserAccount
 
+
 class UserAccountManager(BaseUserManager):
     """
     A custom manager for the User model that provides helper methods for creating users and superusers.

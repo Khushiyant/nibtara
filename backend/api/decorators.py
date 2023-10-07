@@ -1,5 +1,6 @@
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.decorators import user_passes_test
+from .models import UserAccount
 
 
 def client_required(
@@ -14,7 +15,7 @@ def client_required(
     :return: The decorated view function.
     '''
     actual_decorator = user_passes_test(
-        lambda u: u.is_active and u.is_client,
+        lambda u: u.is_active and u.user_type == UserAccount.Roles.CLIENT,
         login_url=login_url,
         redirect_field_name=redirect_field_name
     )
@@ -35,7 +36,7 @@ def lawyer_required(
     :return: The decorated view function.
     '''
     actual_decorator = user_passes_test(
-        lambda u: u.is_active and u.is_lawyer,
+        lambda u: u.is_active and u.user_type == UserAccount.Roles.LAWYER,
         login_url=login_url,
         redirect_field_name=redirect_field_name
     )
@@ -56,7 +57,7 @@ def judge_required(
     :return: The decorated view function.
     '''
     actual_decorator = user_passes_test(
-        lambda u: u.is_active and u.is_judge,
+        lambda u: u.is_active and u.user_type == UserAccount.Roles.JUDGE,
         login_url=login_url,
         redirect_field_name=redirect_field_name
     )
